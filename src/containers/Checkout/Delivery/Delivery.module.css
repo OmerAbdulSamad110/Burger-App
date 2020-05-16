@@ -1,0 +1,15 @@
+.Delivery{
+    margin: 20px auto;
+    width: 80%;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 2px 3px #cccccc;
+    padding: 10px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+@media(min-width: 500px){
+    .Delivery{
+        width: 500px;
+    }
+}
