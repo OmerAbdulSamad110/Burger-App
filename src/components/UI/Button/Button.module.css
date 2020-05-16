@@ -19,6 +19,13 @@
     color: #ffffff;
 }
 
+.Button:disabled{
+    background-color: #cccccc !important;
+    color: #333333 !important;
+    border: 1px solid #333333 !important;
+    cursor: default;
+}
+
 .Success{
     border: 1px solid #5c9210;
     color: #5c9210;

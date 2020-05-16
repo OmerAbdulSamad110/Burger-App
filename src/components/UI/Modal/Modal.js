@@ -6,8 +6,8 @@ function Modal(props) {
     return (
         <Fragment>
             <Backdrop
-                show={props.purchasing}
-                close={props.togglePurchasing} />
+                show={props.show}
+                close={props.modalClose} />
             <div className={Styles['Modal']}>
                 {props.children}
             </div>
