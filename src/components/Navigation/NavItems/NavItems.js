@@ -5,13 +5,8 @@ import NavItem from './NavItem/NavItem';
 function NavItems(props) {
     return (
         <ul className={Styles['NavItems']}>
-            <NavItem
-                link="/"
-                active
-            >Burger Builder</NavItem>
-            <NavItem
-                link="/"
-            >CheckOut</NavItem>
+            <NavItem link="/">Burger Builder</NavItem>
+            <NavItem link="/orders">Orders</NavItem>
         </ul>
     )
 };

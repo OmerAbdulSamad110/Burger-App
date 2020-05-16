@@ -18,7 +18,7 @@ function OrderSummary(props) {
             <p>Price: <strong>{props.price.toFixed(2)} Rs</strong></p>
             <p>Continue to checkout?</p>
             <Button
-                click={props.continue}
+                click={props.order}
                 btnType="Success">Continue</Button>
             <Button
                 click={props.togglePurchasing}
