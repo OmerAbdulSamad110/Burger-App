@@ -1,47 +1,47 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
-import { Route } from 'react-router';
-import Delivery from './Delivery/Delivery';
+import { Route, Redirect } from 'react-router';
+import OrderForm from './OrderForm/OrderForm';
+import { connect } from 'react-redux';
 
 class Checkout extends Component {
-    state = {
-        ingredients: {},
-        totalPrice: 0
-    }
-
-    componentDidMount() {
-        if (this.props.location.ingredients &&
-            this.props.location.totalPrice) {
-            this.setState({
-                ingredients: this.props.location.ingredients,
-                totalPrice: this.props.location.totalPrice
-            });
-        }
-        else {
-            this.props.history.replace('/');
-        }
-    }
 
     goBackHandler = () => {
         this.props.history.goBack();
     }
 
     continueHandler = () => {
-        this.props.history.replace('/checkout/delivery');
+        this.props.history.replace('/checkout/order');
     }
 
     render() {
+        let summary = <Redirect to='/' />;
+        if (this.props.ingredients && !this.props.purchased) {
+            summary = (
+                <Fragment>
+                    <CheckoutSummary
+                        ingredients={this.props.ingredients}
+                        back={this.goBackHandler}
+                        continue={this.continueHandler} />;
+                    <Route path={`${this.props.match.path}/order`}
+                        component={OrderForm} />
+                </Fragment>
+            );
+        }
         return (
             <div>
-                <CheckoutSummary
-                    ingredients={this.state.ingredients}
-                    back={this.goBackHandler}
-                    continue={this.continueHandler} />;
-                <Route path={`${this.props.match.path}/delivery`}
-                    render={(props) => (<Delivery {...this.state} {...props} />)} />
+                {summary}
             </div>
-        )
+        );
+
     }
 }
 
-export default Checkout;
+const mapStateToProps = state => {
+    return {
+        ingredients: state.burgerBuilder.ingredients,
+        purchased: state.order.purchased
+    }
+}
+
+export default connect(mapStateToProps)(Checkout);

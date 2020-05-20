@@ -1,4 +1,4 @@
-.Delivery{
+.OrderForm{
     margin: 20px auto;
     width: 80%;
     border: 1px solid #eeeeee;
@@ -9,7 +9,7 @@
 }
 
 @media(min-width: 500px){
-    .Delivery{
+    .OrderForm{
         width: 500px;
     }
 }

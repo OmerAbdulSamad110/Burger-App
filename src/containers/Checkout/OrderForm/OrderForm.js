@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import Styles from './Delivery.module.css';
+import Styles from './OrderForm.module.css';
 import Button from '../../../components/UI/Button/Button';
 import axios from '../../../axios-order';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Form from '../../../components/UI/Form/Form';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import { connect } from 'react-redux';
+import * as actions from '../../../store/actions/index';
 
-class Delivery extends Component {
+class OrderForm extends Component {
     state = {
         orderForm: {
             name: {
@@ -38,13 +41,13 @@ class Delivery extends Component {
                 touched: false,
                 value: ''
             },
-            number: {
+            phone: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Enter your number'
+                    placeholder: 'Enter your phone number'
                 },
-                identify: { name: 'number', id: 'number' },
+                identify: { name: 'phone', id: 'phone' },
                 validation: {
                     required: true,
                     minLength: 11,
@@ -85,7 +88,6 @@ class Delivery extends Component {
                 value: 'cod',
             }
         },
-        loading: false,
         formValid: false
     }
 
@@ -123,7 +125,6 @@ class Delivery extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
         let formData = {};
         for (let key in this.state.orderForm) {
             formData[key] = this.state.orderForm[key].value;
@@ -133,17 +134,7 @@ class Delivery extends Component {
             price: this.props.totalPrice,
             orderData: formData
         };
-        axios.post('/orders.json', order)
-            .then(response => {
-                if (response.status === 200) {
-                    this.setState({ loading: false });
-                    this.props.history.push('/');
-                }
-            })
-            .catch(error => {
-                this.setState({ loading: false });
-                console.log(error);
-            });
+        this.props.onOrderBurger(order);
     }
 
     render() {
@@ -179,16 +170,30 @@ class Delivery extends Component {
                     disable={!this.state.formValid}>Order</Button>
             </form>
         );
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner />;
         }
         return (
-            <div className={Styles['Delivery']}>
-                <h4 className={Styles['Heading']}>Enter your delivery information</h4>
+            <div className={Styles['OrderForm']}>
+                <h4 className={Styles['Heading']}>Enter your OrderForm information</h4>
                 {form}
             </div>
         )
     }
 }
 
-export default Delivery
+const mapStateToProps = state => {
+    return {
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        loading: state.order.loading
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(OrderForm, axios))
