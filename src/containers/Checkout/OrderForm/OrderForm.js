@@ -7,6 +7,7 @@ import Form from '../../../components/UI/Form/Form';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions/index';
+import { updateObject, checkValidation } from '../../../shared/utility';
 
 class OrderForm extends Component {
     state = {
@@ -35,7 +36,8 @@ class OrderForm extends Component {
                 },
                 identify: { name: 'email', id: 'email' },
                 validation: {
-                    required: true
+                    required: true,
+                    isEmail: true
                 },
                 valid: false,
                 touched: false,
@@ -50,6 +52,7 @@ class OrderForm extends Component {
                 identify: { name: 'phone', id: 'phone' },
                 validation: {
                     required: true,
+                    isNumeric: true,
                     minLength: 11,
                     maxLength: 11
                 },
@@ -91,31 +94,20 @@ class OrderForm extends Component {
         formValid: false
     }
 
-    checkValidation(value, rules) {
-        let isValid = true;
-        if (!rules) {
-            return isValid;
-        }
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-        if (rules.minLength) {
-            isValid = value.trim().length >= rules.minLength && isValid;
-        }
-        if (rules.maxLength) {
-            isValid = value.trim().length <= rules.maxLength && isValid;
-        }
-        return isValid;
-    }
-
     formChangeHandler = (type, event) => {
-        const newOrderForm = { ...this.state.orderForm };
-        const element = { ...newOrderForm[type] };
-        element.value = event.target.value;
-        const rules = { ...element.validation };
-        element.valid = this.checkValidation(element.value, rules);
-        element.touched = true;
-        newOrderForm[type] = element;
+        const newOrderForm = updateObject(
+            this.state.orderForm,
+            {
+                [type]: updateObject(this.state.orderForm[type], {
+                    value: event.target.value,
+                    valid: checkValidation(
+                        event.target.value,
+                        this.state.orderForm[type].validation
+                    ),
+                    touched: true
+                })
+            }
+        )
         let formValid = true;
         for (let key in newOrderForm) {
             formValid = newOrderForm[key].valid && formValid;
@@ -132,9 +124,10 @@ class OrderForm extends Component {
         const order = {
             ingredients: this.props.ingredients,
             price: this.props.totalPrice,
-            orderData: formData
+            orderData: formData,
+            userId: this.props.userId
         };
-        this.props.onOrderBurger(order);
+        this.props.onOrderBurger(order, this.props.token);
     }
 
     render() {
@@ -186,13 +179,15 @@ const mapStateToProps = state => {
     return {
         ingredients: state.burgerBuilder.ingredients,
         totalPrice: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+        onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
     }
 }
 

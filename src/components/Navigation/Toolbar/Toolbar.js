@@ -11,7 +11,7 @@ function Toolbar(props) {
                 toggleDrawer={props.toggleDrawer} />
             <Logo styled={Styles['Logo']} />
             <nav>
-                <NavItems />
+                <NavItems isAuth={props.isAuth} />
             </nav>
         </header>
     );
