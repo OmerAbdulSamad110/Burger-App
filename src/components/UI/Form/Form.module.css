@@ -18,7 +18,7 @@
     outline: none;
     border: 1px solid #cccccc;
     background-color: #ffffff;
-    font: inherit;
+    font: inherit !important;
     padding: 6px 10px;
     display: block;
     width: 100%;

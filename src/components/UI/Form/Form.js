@@ -12,16 +12,16 @@ function Form(props) {
             formElement = <input
                 {...invalidClass || null}
                 {...props.identify}
-                {...props.config}
                 value={props.value}
+                {...props.config}
                 onChange={props.change} />;
             break;
         case 'textarea':
             formElement = <textarea
                 {...invalidClass || null}
                 {...props.identify}
-                {...props.config}
                 value={props.value}
+                {...props.config}
                 onChange={props.change} />;
             break;
         case 'select':
@@ -38,8 +38,8 @@ function Form(props) {
             formElement = <input
                 {...invalidClass || null}
                 {...props.identify}
-                {...props.config}
                 value={props.value}
+                {...props.config}
                 onChange={props.change} />;
             break;
     }

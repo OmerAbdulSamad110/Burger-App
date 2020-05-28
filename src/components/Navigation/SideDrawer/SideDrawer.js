@@ -12,8 +12,8 @@ function SideDrawer(props) {
                 close={props.toggleDrawer} />
             <div className={Styles['SideDrawer']}>
                 <Logo styled={Styles['Logo']} />
-                <nav>
-                    <NavItems />
+                <nav onClick={props.toggleDrawer}>
+                    <NavItems isAuth={props.isAuth} />
                 </nav>
             </div>
         </Fragment>

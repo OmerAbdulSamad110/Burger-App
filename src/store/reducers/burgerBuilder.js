@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 
 const initialState = {
     ingredients: null,
@@ -10,9 +10,46 @@ const initialState = {
         meat: 100
     },
     totalPrice: 200,
-    error: false
+    error: false,
+    building: false
 }
 
+function addIngredient(state, action) {
+    return updateObject(state, {
+        ingredients: {
+            ...state.ingredients,
+            [action.ingredientName]:
+                state.ingredients[action.ingredientName] + 1
+        },
+        totalPrice: state.totalPrice + state.ingredientPrice[action.ingredientName],
+        building: true
+    });
+}
+
+function removeIngredient(state, action) {
+    return updateObject(state, {
+        ingredients: {
+            ...state.ingredients,
+            [action.ingredientName]:
+                state.ingredients[action.ingredientName] - 1
+        },
+        totalPrice: state.totalPrice - state.ingredientPrice[action.ingredientName],
+        building: true
+    });
+}
+
+function setIngredients(state, action) {
+    return updateObject(state, {
+        totalPrice: 200,
+        ingredients: action.ingredients,
+        error: false,
+        building: false
+    });
+}
+
+function fetchIngredientsFailed(state, action) {
+    return updateObject(state, { error: true });
+}
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -27,40 +64,6 @@ const reducer = (state = initialState, action) => {
         default:
             return state;
     }
-}
-
-function addIngredient(state, action) {
-    return updateObject(state, {
-        ingredients: {
-            ...state.ingredients,
-            [action.ingredientName]:
-                state.ingredients[action.ingredientName] + 1
-        },
-        totalPrice: state.totalPrice + state.ingredientPrice[action.ingredientName]
-    });
-}
-
-function removeIngredient(state, action) {
-    return updateObject(state, {
-        ingredients: {
-            ...state.ingredients,
-            [action.ingredientName]:
-                state.ingredients[action.ingredientName] - 1
-        },
-        totalPrice: state.totalPrice - state.ingredientPrice[action.ingredientName]
-    });
-}
-
-function setIngredients(state, action) {
-    return updateObject(state, {
-        totalPrice: 200,
-        ingredients: action.ingredients,
-        error: false
-    });
-}
-
-function fetchIngredientsFailed(state, action) {
-    return updateObject(state, { error: true });
 }
 
 export default reducer

@@ -1,10 +1,40 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 
 const initialState = {
     orders: [],
     loading: false,
     purchased: false
+}
+
+function start(state) {
+    return updateObject(state, { loading: true });
+}
+
+function failed(state) {
+    return updateObject(state, { loading: false });
+}
+
+function purchaseBurgerInit(state, action) {
+    return updateObject(state, { purchased: false })
+}
+function purchaseBurgerSuccess(state, action) {
+    return updateObject(
+        state,
+        {
+            loading: false,
+            purchased: true,
+            orders: state.orders.concat(action.orderData)
+        });
+}
+
+function fetchOrdersSuccess(state, action) {
+    return updateObject(
+        state,
+        {
+            loading: false,
+            orders: action.orders
+        });
 }
 
 const reducer = (state = initialState, action) => {
@@ -26,37 +56,6 @@ const reducer = (state = initialState, action) => {
         default:
             return state;
     }
-}
-
-function start(state) {
-    return updateObject(state, { loading: true });
-}
-function failed(state) {
-    return updateObject(state, { loading: false });
-}
-
-
-function purchaseBurgerInit(state, action) {
-    return updateObject(state, { purchased: false })
-}
-function purchaseBurgerSuccess(state, action) {
-    return updateObject(
-        state,
-        {
-            loading: false,
-            purchased: true,
-            orders: state.orders.concat(action.orderData)
-        });
-}
-
-
-function fetchOrdersSuccess(state, action) {
-    return updateObject(
-        state,
-        {
-            loading: false,
-            orders: action.orders
-        });
 }
 
 export default reducer
