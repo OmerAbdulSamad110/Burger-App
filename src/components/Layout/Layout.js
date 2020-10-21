@@ -1,38 +1,31 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useState } from 'react';
 import Styles from './Layout.module.css';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 import { connect } from 'react-redux';
 
-class Layout extends Component {
-    // console.log(this.props.showDrawer, this.props.showBackdrop);
-    state = {
-        showDrawer: false
+function Layout(props) {
+    const [showDrawer, setShowDrawer] = useState(false)
+
+    const toggleDrawerHandler = () => {
+        setShowDrawer(!showDrawer);
     }
 
-    toggleDrawerHandler = () => {
-        this.setState((prevState) => {
-            return { showDrawer: !prevState.showDrawer }
-        })
-    }
-
-    render() {
-        return (
-            <Fragment>
-                <Toolbar
-                    isAuth={this.props.isAuth}
-                    toggleDrawer={this.toggleDrawerHandler} />
-                {this.state.showDrawer ?
-                    <SideDrawer
-                        isAuth={this.props.isAuth}
-                        showDrawer={this.state.showDrawer}
-                        toggleDrawer={this.toggleDrawerHandler} /> : null}
-                <main className={Styles['Content']}>
-                    {this.props.children}
-                </main>
-            </Fragment>
-        );
-    }
+    return (
+        <Fragment>
+            <Toolbar
+                isAuth={props.isAuth}
+                toggleDrawer={toggleDrawerHandler} />
+            {showDrawer ?
+                <SideDrawer
+                    isAuth={props.isAuth}
+                    showDrawer={showDrawer}
+                    toggleDrawer={toggleDrawerHandler} /> : null}
+            <main className={Styles['Content']}>
+                {props.children}
+            </main>
+        </Fragment>
+    );
 }
 
 const mapStateToProps = state => {

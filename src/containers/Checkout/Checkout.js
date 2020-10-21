@@ -1,40 +1,37 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import { Route, Redirect } from 'react-router';
 import OrderForm from './OrderForm/OrderForm';
 import { connect } from 'react-redux';
 
-class Checkout extends Component {
+function Checkout(props) {
 
-    goBackHandler = () => {
-        this.props.history.goBack();
+    const goBackHandler = () => {
+        props.history.goBack();
     }
 
-    continueHandler = () => {
-        this.props.history.replace('/checkout/order');
+    const continueHandler = () => {
+        props.history.replace('/checkout/order');
     }
 
-    render() {
-        let summary = <Redirect to='/' />;
-        if (this.props.ingredients && !this.props.purchased) {
-            summary = (
-                <Fragment>
-                    <CheckoutSummary
-                        ingredients={this.props.ingredients}
-                        back={this.goBackHandler}
-                        continue={this.continueHandler} />;
-                    <Route path={`${this.props.match.path}/order`}
-                        component={OrderForm} />
-                </Fragment>
-            );
-        }
-        return (
-            <div>
-                {summary}
-            </div>
+    let summary = <Redirect to='/' />;
+    if (props.ingredients && !props.purchased) {
+        summary = (
+            <Fragment>
+                <CheckoutSummary
+                    ingredients={props.ingredients}
+                    back={goBackHandler}
+                    continue={continueHandler} />;
+                <Route path={`${props.match.path}/order`}
+                    component={OrderForm} />
+            </Fragment>
         );
-
     }
+    return (
+        <div>
+            {summary}
+        </div>
+    );
 }
 
 const mapStateToProps = state => {

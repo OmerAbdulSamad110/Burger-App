@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -9,16 +9,16 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import axios from '../../axios-order';
 
-class BurgerBuilder extends Component {
-    state = {
-        purchasing: false
-    }
+function BurgerBuilder(props) {
 
-    componentDidMount() {
-        this.props.onInitIngredients();
-    }
 
-    updatePurchaseState(ingredients) {
+    const [purchasing, setPurchasing] = useState(false);
+    const { onInitIngredients } = props;
+    useEffect(() => {
+        onInitIngredients();
+    }, [onInitIngredients]);
+
+    const updatePurchaseState = (ingredients) => {
         let sum = 0;
         Object.values(ingredients).forEach(val => {
             sum += val;
@@ -26,60 +26,56 @@ class BurgerBuilder extends Component {
         return sum > 0;
     }
 
-    togglePurchasingHandler = () => {
-        if (!this.props.isAuth) {
-            this.props.onSetAuthRedirectPath('/checkout');
-            this.props.history.push('/auth');
+    const togglePurchasingHandler = () => {
+        if (!props.isAuth) {
+            props.onSetAuthRedirectPath('/checkout');
+            props.history.push('/auth');
         } else {
-            this.setState((prevState) => {
-                return { purchasing: !prevState.purchasing }
-            });
+            setPurchasing(!purchasing);
         }
     }
 
-    continuePurchaseHandler = () => {
-        this.props.onPurchaseInit();
-        this.props.history.push('/checkout');
+    const continuePurchaseHandler = () => {
+        props.onPurchaseInit();
+        props.history.push('/checkout');
     }
 
-    render() {
-        const disabledInfo = { ...this.props.ingredients };
-        Object.keys(disabledInfo).forEach(key => {
-            disabledInfo[key] = disabledInfo[key] === 0;
-        });
+    const disabledInfo = { ...props.ingredients };
+    Object.keys(disabledInfo).forEach(key => {
+        disabledInfo[key] = disabledInfo[key] === 0;
+    });
 
-        let burger = <Spinner />;
-        if (this.props.ingredients && this.props.totalPrice) {
-            burger = (
-                <Fragment>
-                    <Burger ingredients={this.props.ingredients} />
-                    <BuildControls
-                        disabled={disabledInfo}
-                        price={this.props.totalPrice}
-                        purchasable={this.updatePurchaseState(this.props.ingredients)}
-                        add={this.props.onAddIngredient}
-                        remove={this.props.onRemoveIngredient}
-                        togglePurchasing={this.togglePurchasingHandler} />
-                </Fragment>);
-        }
-
-        return (
+    let burger = <Spinner />;
+    if (props.ingredients && props.totalPrice) {
+        burger = (
             <Fragment>
-                {this.state.purchasing ?
-                    (<Modal
-                        show={this.state.purchasing}
-                        modalClose={this.togglePurchasingHandler}>
-                        <OrderSummary
-                            ingredients={this.props.ingredients}
-                            price={this.props.totalPrice}
-                            order={this.continuePurchaseHandler}
-                            togglePurchasing={this.togglePurchasingHandler} />
-                    </Modal>) : null}
-                {burger}
-
-            </Fragment>
-        )
+                <Burger ingredients={props.ingredients} />
+                <BuildControls
+                    disabled={disabledInfo}
+                    price={props.totalPrice}
+                    purchasable={updatePurchaseState(props.ingredients)}
+                    add={props.onAddIngredient}
+                    remove={props.onRemoveIngredient}
+                    togglePurchasing={togglePurchasingHandler} />
+            </Fragment>);
     }
+
+    return (
+        <Fragment>
+            {purchasing ?
+                (<Modal
+                    show={purchasing}
+                    modalClose={togglePurchasingHandler}>
+                    <OrderSummary
+                        ingredients={props.ingredients}
+                        price={props.totalPrice}
+                        order={continuePurchaseHandler}
+                        togglePurchasing={togglePurchasingHandler} />
+                </Modal>) : null}
+            {burger}
+
+        </Fragment>
+    )
 }
 
 const mapStateToProps = state => {

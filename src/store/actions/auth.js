@@ -67,9 +67,10 @@ export const auth = (authData) => {
                     dispatch(checkAuthTimeout(response.data.expiresIn));
                 }
             })
-            .catch((error) => {
-                console.log(error.response.data.error);
-                dispatch(authFailed(error.response.data.error));
+            .catch(error => {
+                if (error.response) {
+                    dispatch(authFailed(error.response.data.error));
+                }
             });
     }
 }

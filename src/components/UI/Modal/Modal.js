@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import Styles from './Modal.module.css';
 import Backdrop from '../Backdrop/Backdrop';
 
@@ -15,4 +15,6 @@ function Modal(props) {
     )
 }
 
-export default Modal
+export default memo(Modal, (prevProps, nextProps) =>
+    nextProps.show === prevProps.show && nextProps.children === prevProps.children
+)

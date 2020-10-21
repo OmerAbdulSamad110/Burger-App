@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import Order from '../../components/Order/Order';
 import Styles from './Orders.module.css';
 import axios from '../../axios-order';
@@ -7,35 +7,34 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
-class Orders extends Component {
+function Orders(props) {
 
-    componentDidMount() {
-        this.props.onFetchOrders(this.props.token, this.props.userId);
-    }
+    const { onFetchOrders, token, userId } = props;
+    useEffect(() => {
+        onFetchOrders(token, userId);
+    }, [onFetchOrders, token, userId]);
 
-    render() {
 
-        let order = <Spinner />;
-        if (!this.props.loading) {
-            if (this.props.orders.length > 0) {
-                order = (
-                    this.props.orders.map(order => {
-                        return <Order
-                            key={order.id}
-                            ingredients={order.ingredients}
-                            totalPrice={+order.price} />
-                    })
-                );
-            } else {
-                order = <p className={Styles['noOrder']}>Please add burgers to order</p>;
-            }
+    let order = <Spinner />;
+    if (!props.loading) {
+        if (props.orders.length > 0) {
+            order = (
+                props.orders.map(order => {
+                    return <Order
+                        key={order.id}
+                        ingredients={order.ingredients}
+                        totalPrice={+order.price} />
+                })
+            );
+        } else {
+            order = <p className={Styles['noOrder']}>Please add burgers to order</p>;
         }
-        return (
-            <div>
-                {order}
-            </div>
-        )
     }
+    return (
+        <div>
+            {order}
+        </div>
+    )
 }
 
 const mapStateToProps = state => {
