@@ -1,0 +1,9 @@
+.noOrder{
+    margin: 0 1.5rem;
+    padding: 1rem;
+    text-align: center;
+    font: inherit;
+    font-weight: bold;
+    box-shadow: 0 2px 3px #cccccc;
+    border: 1px solid #eeeeee;
+}

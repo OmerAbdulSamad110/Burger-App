@@ -1,0 +1,37 @@
+.Form{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.Form label{
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    text-transform: capitalize;
+    text-align: initial !important;
+}
+
+.Form input,
+.Form textarea,
+.Form select{
+    outline: none;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    font: inherit !important;
+    padding: 6px 10px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.Form input:focus,
+.Form textarea:focus{
+    outline: none;
+    background-color: #e8f0fe;
+}
+
+.Invalid{
+    border: 1px solid red !important;
+}
